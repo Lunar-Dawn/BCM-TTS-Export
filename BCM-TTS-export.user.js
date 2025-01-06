@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Battle Companies Manager TTS description exporter
 // @namespace    lunarrequiem.net
-// @version      0.1.0
+// @version      0.1.1
 // @description  Exports MESBG data to a format that can be pasted into TTS model descriptions
 // @author       Lunar Dawn
 // @match        https://battle-companies-manager.com/company/*
@@ -124,7 +124,7 @@ const generateWarriorDesc = warrior => {
 		desc += `${stats.might}/${stats.will}/${stats.fate}\n`
 	}
 
-	desc += 'Mv   F    S D A W C\n'
+	desc += 'Mv  F     S D A W C\n'
 	desc += `${stats.move}" ${stats.fight}/${stats.shoot}+ ${stats.strength} ${stats.defence} ${stats.attacks} ${stats.wounds} ${stats.courage}\n\n`
 
 	if(warrior.wargear.length !== 0) {
@@ -160,12 +160,12 @@ const generateWarriorDesc = warrior => {
 		for (mount of warrior.wargear.filter(g => g.mount == 1)) {
 			desc += `[ae00ff]${mount.name}[-]\n`
 
-			desc += 'Mv    F     S D A W C\n'
+			desc += 'Mv  F     S D A W C\n'
 			desc += `${mount.move}" ${mount.fight}/${mount.shoot}+ ${mount.strength} ${mount.defence} ${mount.attacks} ${mount.wounds} ${mount.courage}\n\n`
 		}
 	}
 
-	return desc
+	return desc.trim()
 }
 
 const saveAll = warriors => {
