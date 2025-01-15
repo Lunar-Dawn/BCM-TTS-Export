@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Battle Companies Manager TTS description exporter
 // @namespace    lunarrequiem.net
-// @version      0.1.1
+// @version      0.2.0
 // @description  Exports MESBG data to a format that can be pasted into TTS model descriptions
 // @author       Lunar Dawn
 // @match        https://battle-companies-manager.com/company/*
@@ -93,33 +93,27 @@ const findReact = (dom, traverseUp = 0) => {
 }
 
 const generateWarriorName = warrior => {
-	switch(warrior.rank) {
-		case 'Leader':
-			return `[ffb000]${warrior.name} (L)[-]`
-
-		case 'Sergeant':
-			return `[cac0cc]${warrior.name} (S)[-]`
-
-		case 'Hero':
-			return `[9b6a54]${warrior.name} (H)[-]`
-
-		case 'Warrior':
-			return `[a19d94]${warrior.name}[-]`
-
-		case 'Creature':
-			return `[425562]${warrior.name} (C)[-]`
-
-		case 'Wanderer':
-			return `[425562]${warrior.name} (W)[-]`
-
-		default:
-			alert('Scream at Luna')
+	const colors = {
+		'Leader':   '[ffb000]',
+		'Sergeant': '[cac0cc]',
+		'Hero':     '[9b6a54]',
+		'Warrior':  '[a19d94]',
+		'Creature': '[425562]',
+		'Wanderer': '[425562]',
 	}
+	const stats = warrior.totalStats
+
+	let str =  `${colors[warrior.rank]}${warrior.name}[-] (${stats.wounds}/${stats.wounds})`
+	if(stats.might || stats.will || stats.fate) {
+		str += ` [${stats.might}/${stats.will}/${stats.fate}]`
+	}
+
+	return str
 }
 const generateWarriorDesc = warrior => {
 	let desc = '';
 
-	const stats = warrior.totalStats;
+	const stats = warrior.totalStats
 	if(stats.might || stats.will || stats.fate) {
 		desc += `${stats.might}/${stats.will}/${stats.fate}\n`
 	}
@@ -155,8 +149,17 @@ const generateWarriorDesc = warrior => {
 
 		desc += '\n\n'
 	}
+	if(warrior.armWound || warrior.legWound || warrior.oldWound) {
+		desc += '[780000]Injuries\n'
+		if(warrior.armWound)
+			desc += 'Arm Wound\n'
+		if(warrior.legWound)
+			desc += 'Leg Wound\n'
+		if(warrior.oldWound)
+			desc += `Old Wounds: ${warrior.oldWound}\n`
+		desc += '[-]\n'
+	}
 	if(warrior.wargear.some(g => g.mount == 1)) {
-
 		for (mount of warrior.wargear.filter(g => g.mount == 1)) {
 			desc += `[ae00ff]${mount.name}[-]\n`
 
