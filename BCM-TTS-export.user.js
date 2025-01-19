@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Battle Companies Manager TTS description exporter
 // @namespace    lunarrequiem.net
-// @version      0.2.0
+// @version      0.2.1
 // @description  Exports MESBG data to a format that can be pasted into TTS model descriptions
 // @author       Lunar Dawn
 // @match        https://battle-companies-manager.com/company/*
@@ -114,12 +114,17 @@ const generateWarriorDesc = warrior => {
 	let desc = '';
 
 	const stats = warrior.totalStats
-	if(stats.might || stats.will || stats.fate) {
-		desc += `${stats.might}/${stats.will}/${stats.fate}\n`
-	}
 
-	desc += 'Mv  F     S D A W C\n'
-	desc += `${stats.move}" ${stats.fight}/${stats.shoot}+ ${stats.strength} ${stats.defence} ${stats.attacks} ${stats.wounds} ${stats.courage}\n\n`
+	desc += 'Mv  F     S D A W C'
+  if(stats.might || stats.will || stats.fate) {
+		desc += ' M W F'
+	}
+  desc += '\n'
+	desc += `${stats.move}" ${stats.fight}/${stats.shoot}+ ${stats.strength} ${stats.defence} ${stats.attacks}  ${stats.wounds} ${stats.courage}`
+  if(stats.might || stats.will || stats.fate) {
+		desc += ` ${stats.might} ${stats.will} ${stats.fate}`
+	}
+  desc += '\n\n'
 
 	if(warrior.wargear.length !== 0) {
 		desc += '[af9895]Wargear[-]\n'
@@ -130,7 +135,7 @@ const generateWarriorDesc = warrior => {
 	}
 	if(warrior.specialRules.length !== 0) {
 		desc += '[95b193]Special Rules[-]\n'
-		
+
 		desc += warrior.specialRules.map(r => r.name).join('\n')
 
 		desc += '\n\n'
@@ -189,7 +194,7 @@ function markLastClicked(e) {
 
     span
         .fadeOut(
-        	100, 
+        	100,
         	() => span.text('✔️ Copied')
         		.fadeIn(100)
         )
